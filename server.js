@@ -28,17 +28,7 @@ var httpServer = http
 
 var socketServer = net.createServer();
 socketServer.clients = [];
-
-socketServer.on('connection', function(client) {
-  socketServer.clients.push(client);
-  client.on('error', function(err) {
-    removeClientFromList(client);
-  });
-  client.on('end', function() {
-    removeClientFromList(client);
-  });
-});
-
+socketServer.on('connection', acceptNewClient);
 socketServer.listen(config.clientPort);
 
 
@@ -115,6 +105,30 @@ function writeLog(text) {
         fs.closeSync(fd);
       });
     }
+  });
+}
+
+
+function acceptNewClient(client) {
+  timestamp = Math.floor(new Date() / 1000).toString();
+  client.write(timestamp);
+
+  client.on('data', function (data) {
+    var sha1 = crypto.createHash('sha1');
+    var signature = sha1.update(config.clientToken + timestamp).digest('hex');
+    if (data.toString() === signature) {
+      socketServer.clients.push(client);
+    } else {
+      client.destroy();
+    }
+  });
+
+  client.on('error', function(err) {
+    removeClientFromList(client);
+  });
+
+  client.on('end', function() {
+    removeClientFromList(client);
   });
 }
 
