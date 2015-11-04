@@ -1,0 +1,6 @@
+// change the name of this file to 'config.js'
+module.exports = {
+    'token': 'mytoken',     // 公众号的令牌
+    'encodingAesKey': 'mykey',  // 公众号的消息加解密密钥
+    'clientToken': 'token2'
+}
