@@ -16,6 +16,7 @@ var url = require('url');
 var querystring = require('querystring');
 var crypto = require('crypto');
 var net = require('net'); 
+var fs = require('fs');
 var xml2js = require('xml2js');
 
 var config = require('./config');
@@ -85,6 +86,9 @@ function handleXmlMessage(xmlMessage) {
           if (xmlResult.MsgType[0] === 'text' &&
               xmlResult.Content[0] !== null) {
             handleTextMessage(xmlResult.Content[0]);
+            writeLog(xmlResult.FromUserName[0] + ', '
+                + xmlResult.CreateTime[0] + ', '
+                + xmlResult.Content[0] + '\n');
           }
         }
       }
@@ -99,6 +103,17 @@ function handleTextMessage(text) {
       client.write(text);
     } else {
       removeClientFromList(client);
+    }
+  });
+}
+
+
+function writeLog(text) {
+  fs.open(config.logName + '.log', 'a', function (err, fd) {
+    if (!err) {
+      fs.write(fd, text, function (err) {
+        fs.closeSync(fd);
+      });
     }
   });
 }

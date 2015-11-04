@@ -3,7 +3,9 @@ module.exports = {
   'httpPort': 80,
   'token': 'mytoken',           // 公众号的令牌
   'encodingAesKey': 'mykey',    // 公众号的消息加解密密钥
-  
+
   'clientPort': 32300,
-  'clientToken': 'token2'
+  'clientToken': 'token2',
+
+  'logName': 'log'
 }
