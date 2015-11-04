@@ -15,14 +15,30 @@ var http = require('http');
 var url = require('url');
 var querystring = require('querystring');
 var crypto = require('crypto');
+var net = require('net'); 
 var xml2js = require('xml2js');
 
 var config = require('./config');
 
 
-var server = http
+var httpServer = http
   .createServer(wechatReceiver)
   .listen(config.httpPort);
+
+var socketServer = net.createServer();
+socketServer.clients = [];
+
+socketServer.on('connection', function(client) {
+  socketServer.clients.push(client);
+  client.on('error', function(err) {
+    removeClientFromList(client);
+  });
+  client.on('end', function() {
+    removeClientFromList(client);
+  });
+});
+
+socketServer.listen(config.clientPort);
 
 
 function wechatReceiver(request, response) {
@@ -78,5 +94,19 @@ function handleXmlMessage(xmlMessage) {
 
 
 function handleTextMessage(text) {
-  // TODO: 转发
+  socketServer.clients.forEach(function (client) {
+    if (client.writable) {
+      client.write(text);
+    } else {
+      removeClientFromList(client);
+    }
+  });
+}
+
+
+function removeClientFromList(client) {
+    var index = socketServer.clients.indexOf(client);
+    if (index > -1) {
+      socketServer.clients.splice(index, 1);
+    }
 }
