@@ -1,0 +1,27 @@
+{
+  "name": "wechat_listener",
+  "description": "接收发送到微信公众平台的消息并转发.",
+  "keywords": [
+    "wechat"
+  ],
+  "homepage": "https://github.com/bssthu/wechat_listener",
+  "version": "0.1.0",
+  "author": {
+    "name": "bssthu"
+  },
+  "main": "./server",
+  "scripts": {
+    "start": "node server.js",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bssthu/wechat_listener.git"
+  },
+  "dependencies": {
+    "xml2js": ">=0.2.3"
+  },
+  "license": "LGPLv3",
+  "bugs": {
+    "url": "https://github.com/bssthu/wechat_listener/issues"
+  }
+}
