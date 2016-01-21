@@ -8,5 +8,14 @@
 
 在微信公众平台相应设置 URL, Token 等内容。
 
+启动方法：
+```bash
+node server.js
+```
+或
+```bash
+node .
+```
+
 ## License
 LGPLv3
